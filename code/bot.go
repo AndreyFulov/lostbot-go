@@ -195,6 +195,7 @@ func (tg *TelegramBot) Bot() {
 					msg.ReplyToMessageID = update.Message.MessageID
 					bot.Send(msg)
 				}
+				//
 
 				
 		}
