@@ -8,11 +8,10 @@ For details of changes in the bot go to CHANGELOG.md
 
 ### Road Map
 
-> :white_check_mark: First version of players table
-> :white_check_mark: System of Casino
-> :white_check_mark: Top money
-> :white_check_mark: Display profile command
-> :black_square_button: Stock system
-
-> > :black_square_button: Stocks can fall and rise thanks to player investment
-> > :black_square_button: Players can add their own stocks on market
+- [x] First version of players table
+- [x] System of Casino
+- [x] Top money
+- [x] Display profile command
+- [ ] Stock system
+  - [ ] Stocks can fall and rise thanks to player investment
+  - [ ] Players can add their own stocks on market
