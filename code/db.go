@@ -15,12 +15,24 @@ type Player struct {
 	Money int
 }
 
+type BusinessType struct {
+	Id int
+	Name string
+	Price int
+	Income int
+}
+type Business struct {
+	OwnerTGID int64
+	Type int
+	Amount int 
+}
+
 type DataBase struct {
 
 }
 var dbInfo string
 
-
+const CountOfBusinessType = 2
 func (d *DataBase) InitInfo(host, port,user,password,dbname,sslmode string) {
 	dbInfo = fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s", host, port, user, password, dbname, sslmode)
 
@@ -43,6 +55,23 @@ func(d *DataBase) CreateTable() error {
 		Name TEXT,
 		Level INT,
 		Money INT
+	);`); err != nil {
+        return err
+    }
+	if _, err = db.Exec(`CREATE TABLE IF NOT EXISTS business_type (
+		Id INT,
+		Name TEXT,
+		Price INT,
+		Income INT
+	);`); err != nil {
+        return err
+    }
+	initBusinessTypes()
+	if _, err = db.Exec(`CREATE TABLE IF NOT EXISTS business (
+		OwnerTGID INT,
+		Type INT REFERENCES business_type (Id),
+		Amount int
+
 	);`); err != nil {
         return err
     }
@@ -139,4 +168,72 @@ func(d *DataBase) GetTopPlayerByMoney()([]Player, error) {
 		players = append(players, player)
 	}
 	return players, nil
+}
+
+func initBusinessTypes() error{
+	db, err := sql.Open("postgres", dbInfo)
+	if err != nil {
+        return err
+    }
+    defer db.Close()
+
+	data := `INSERT INTO business_type (Id, Name, Price, Income) VALUES (1,'Суши-Эдо',10000, 10)`
+	if _, err = db.Exec(data); err != nil {
+		return err
+	}
+	data = `INSERT INTO business_type (Id, Name, Price, Income) VALUES (2,'Лост-Дот',100000, 100)`
+	if _, err = db.Exec(data); err != nil {
+		return err
+	}
+	data = `DELETE FROM business_type WHERE Id > $1`
+	if _, err = db.Exec(data, CountOfBusinessType); err != nil {
+		return err
+	}
+	return nil
+}
+
+
+func(d *DataBase) AddBusinessToPlayer(p Player, biz_type int) error {
+	db, err := sql.Open("postgres", dbInfo)
+	if err != nil {
+        return err
+    }
+    defer db.Close()
+	rows, err := db.Query("SELECT * FROM business WHERE OwnerTGID = $1 AND Type = $2",p.PlayerTGID,biz_type);
+	if rows.Next() {
+		data := `UPDATE business SET Amount = Amount + 1 WHERE OwnerTGID = $1 AND Type = $2`
+		if _, err = db.Exec(data,p.PlayerTGID, biz_type); err != nil {
+			return err
+		}
+	return nil
+	}else {
+		data := `INSERT INTO business (OwnerTGID, Type, Amount) VALUES ($1, $2, $3)`
+		if _, err = db.Exec(data, p.PlayerTGID, biz_type, 1); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func(d *DataBase) GetPlayerBuisnesses(p Player) ([]Business, error) {
+	//Сделать функционал
+}
+
+func (d *DataBase) GetBusinessTypeById(biz_type int) (BusinessType, error) {
+	db, err := sql.Open("postgres", dbInfo)
+	if err != nil {
+        return (BusinessType{}), err
+    }
+    defer db.Close()
+	rows, err := db.Query("SELECT * FROM business_type WHERE Id = $1",biz_type);
+	if rows.Next() {
+		var biz BusinessType
+		err := rows.Scan(&biz.Id, &biz.Name, &biz.Price, &biz.Income)
+		if err != nil {
+			return (BusinessType{}), err
+		}
+		return biz, err
+	}else {
+		return (BusinessType{}), nil
+	}
 }

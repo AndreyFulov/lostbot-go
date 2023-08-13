@@ -195,8 +195,41 @@ func (tg *TelegramBot) Bot() {
 					msg.ReplyToMessageID = update.Message.MessageID
 					bot.Send(msg)
 				}
-				//
-				
+				//Логика покупки бизнеса (СДЕЛАТЬ КРУЧЕ ПОТОМ, ДА)
+				if userInput[0] == "/buy" {
+					p, err := tg.db.GetPlayerByTGId(update.Message.From.ID)
+					if err != nil {
+						log.Panic(err.Error())
+					}
+					if p != (Player{}) {
+						if len(userInput) == 2 {
+							biz_id, err := strconv.Atoi(userInput[1])
+							if err != nil || biz_id <= 0 || biz_id > CountOfBusinessType {
+								msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Неправильно введен тип бизнеса!")
+								msg.ReplyToMessageID = update.Message.MessageID
+								bot.Send(msg)
+							}else{
+								d, err := tg.db.GetBusinessTypeById(biz_id)
+								if err != nil {
+									log.Fatal(err.Error())
+								}
+								msg := tgbotapi.NewMessage(update.Message.Chat.ID, fmt.Sprintf("Вы купили бизнес: %s!", d.Name))
+								msg.ReplyToMessageID = update.Message.MessageID
+								bot.Send(msg)
+
+							}
+						}else{
+							msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Некоректное использование комманды, введите '/buy [тип бизнеса]' ")
+							msg.ReplyToMessageID = update.Message.MessageID
+							bot.Send(msg)
+						}
+					}else {
+						msg := tgbotapi.NewMessage(update.Message.Chat.ID, "У вас еще нет аккаунта, чтоюы создать его '/start [имя]' ")
+						msg.ReplyToMessageID = update.Message.MessageID
+						bot.Send(msg)
+					}
+				}
+
 
 				
 		}
