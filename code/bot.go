@@ -196,6 +196,7 @@ func (tg *TelegramBot) Bot() {
 					bot.Send(msg)
 				}
 				//
+				
 
 				
 		}

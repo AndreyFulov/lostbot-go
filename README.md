@@ -1,10 +1,24 @@
 ## LostBot - A game in text
 
-This project is designed to test my knowledge of the GO language, using a database on PostgresSQL
+This project is designed to test my knowledge of the GO language, using a database on PostgresSQL and Docker
 
 You can use it as a sample project, and you can also make pull requests to add new functionality
 
-For details of changes in the bot go to CHANGELOG.md
+For details of changes in the bot go to [CHANGELOG.md](https://github.com/AndreyFulov/lostbot-go/blob/main/CHANGELOG.md)
+
+To run this you need to
+
+```cmd
+docker build -t lostbot .
+```
+
+and
+
+```cmd
+docker-compose up
+```
+
+Now bot will work!
 
 ### Road Map
 
@@ -12,6 +26,10 @@ For details of changes in the bot go to CHANGELOG.md
 - [x] System of Casino
 - [x] Top money
 - [x] Display profile command
+- [ ] Business System
+  - [ ] AFK Earning
+  - [ ] Database for business
+  - [ ] Upgrade system
 - [ ] Stock system
   - [ ] Stocks can fall and rise thanks to player investment
   - [ ] Players can add their own stocks on market
