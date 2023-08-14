@@ -5,11 +5,6 @@ services:
     image: postgres
     environment:
       POSTGRES_PASSWORD: test
-    volumes:
-      -
-        type: bind
-        source: /tmp/postgres-data
-        target: /var/lib/postgresql/data
 
   bot:
     image: lostbot
