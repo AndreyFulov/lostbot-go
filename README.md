@@ -31,6 +31,6 @@ Now bot will work!
   - [x] Database for business
   - [ ] Upgrade system
   - [x] Buy business
-- [ ] Stock system
-  - [ ] Stocks can fall and rise thanks to player investment
-  - [ ] Players can add their own stocks on market
+- [ ] Shares system
+  - [ ] Shares can fall and rise thanks to player investment
+  - [ ] Players can add their own shares on market
