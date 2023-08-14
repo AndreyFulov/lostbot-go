@@ -44,17 +44,17 @@ func main() {
 func calcPlayerIncomeByBiz(db *DataBase) {
 	players, err := db.GetAllPlayers()
 	if err != nil {
-		log.Fatalf(err.Error())
+		log.Print(err.Error())
 	}
 	for _, p := range players {
 		bizes, err := db.GetPlayerBuisnesses(p)
 		if err != nil {
-			log.Fatalf(err.Error())
+			log.Print(err.Error())
 		}
 		for _, b := range bizes {
 			t,err := db.GetBusinessTypeById(b.Type)
 			if err != nil {
-				log.Fatalf(err.Error())
+				log.Print(err.Error())
 			}
 			db.ChangePlayerMoney(p.PlayerTGID,p.Money + (t.Income * b.Amount))
 		}

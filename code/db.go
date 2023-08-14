@@ -8,7 +8,7 @@ import (
 )
 
 type Player struct {
-	Id int
+	Id int64
 	PlayerTGID int64
 	Name string
 	Level int
@@ -51,7 +51,7 @@ func(d *DataBase) CreateTable() error {
     //Создаем таблицу users
     if _, err = db.Exec(`CREATE TABLE IF NOT EXISTS players (
 		Id SERIAL PRIMARY KEY,
-		PlayerTGID INT,
+		PlayerTGID BIGINT,
 		Name TEXT,
 		Level INT,
 		Money INT
@@ -68,13 +68,14 @@ func(d *DataBase) CreateTable() error {
     }
 	initBusinessTypes()
 	if _, err = db.Exec(`CREATE TABLE IF NOT EXISTS business (
-		OwnerTGID INT,
+		OwnerTGID BIGINT,
 		Type INT REFERENCES business_type (Id),
 		Amount int
 
 	);`); err != nil {
         return err
     }
+	
 
     return nil
 }

@@ -1,3 +1,9 @@
+## `v0.0.31` Minor database fixes (15.08.23)
+
+### Fixed bugs
+
+- Now all telegram id work and did not drop db
+
 ## `v0.0.3` Business update (15.08.23)
 
 ### Added commands
