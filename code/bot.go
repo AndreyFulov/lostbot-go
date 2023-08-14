@@ -300,6 +300,12 @@ func (tg *TelegramBot) Bot() {
 					msg.ReplyToMessageID = update.Message.MessageID
 					bot.Send(msg)
 				}
+				if userInput[0] == "/help" {
+					s := "/start - Создать профиль\n/work - Заработать несчастные 10 долларов\n/buy 'ID' - Купить бизнес\n/bizes - Список доступных бизнесов\n/mybizes - Ваши бизнесы\n/casino 'ставка' - Сыграть в казино\n----\nЕсли будут новые команды, они появятся тут\nhttps://github.com/AndreyFulov/lostbot-go/blob/main/CHANGELOG.md"
+					msg := tgbotapi.NewMessage(update.Message.Chat.ID, s)
+					msg.ReplyToMessageID = update.Message.MessageID
+					bot.Send(msg)
+				}
 
 
 				

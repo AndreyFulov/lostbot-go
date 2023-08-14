@@ -1,3 +1,15 @@
+## `v0.1.0` Open-Beta (15.08.23)
+
+### Wipe
+
+### Added commands
+
+- /help - List of commands
+
+### Balance fixes
+
+- Businesses gave more money per 30 minutes
+
 ## `v0.0.31` Minor database fixes (15.08.23)
 
 ### Fixed bugs
