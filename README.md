@@ -1,5 +1,7 @@
 ## LostBot - A game in text
 
+### Bot now online @LostDotBot to test
+
 This project is designed to test my knowledge of the GO language, using a database on PostgresSQL and Docker
 
 You can use it as a sample project, and you can also make pull requests to add new functionality
