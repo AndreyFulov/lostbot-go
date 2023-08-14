@@ -181,7 +181,7 @@ func initBusinessTypes() error{
     }
     defer db.Close()
 
-	data := `DELETE FROM business_type`
+	data := `DELETE * FROM business_type`
 	if _, err = db.Exec(data, CountOfBusinessType); err != nil {
 		return err
 	}
