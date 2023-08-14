@@ -181,16 +181,17 @@ func initBusinessTypes() error{
     }
     defer db.Close()
 
-	data := `INSERT INTO business_type (Id, Name, Price, Income) VALUES (1,'Суши-Эдо',100, 10)`
+	data := `DELETE FROM business_type`
+	if _, err = db.Exec(data, CountOfBusinessType); err != nil {
+		return err
+	}
+
+	data = `INSERT INTO business_type (Id, Name, Price, Income) VALUES (1,'Суши-Эдо',100, 10)`
 	if _, err = db.Exec(data); err != nil {
 		return err
 	}
 	data = `INSERT INTO business_type (Id, Name, Price, Income) VALUES (2,'Лост-Дот',1000, 100)`
 	if _, err = db.Exec(data); err != nil {
-		return err
-	}
-	data = `DELETE FROM business_type WHERE Id > $1`
-	if _, err = db.Exec(data, CountOfBusinessType); err != nil {
 		return err
 	}
 	return nil
