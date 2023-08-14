@@ -55,19 +55,12 @@ func(d *DataBase) CreateTable() error {
 		Name TEXT,
 		Level INT,
 		Money INT
-	);`); err != nil {
-        return err
-    }
-	if _, err = db.Exec(`CREATE TABLE IF NOT EXISTS business_type (
+	);CREATE TABLE IF NOT EXISTS business_type (
 		Id INT,
 		Name TEXT,
 		Price INT,
 		Income INT
-	);`); err != nil {
-        return err
-    }
-	initBusinessTypes()
-	if _, err = db.Exec(`CREATE TABLE IF NOT EXISTS business (
+	);CREATE TABLE IF NOT EXISTS business (
 		OwnerTGID BIGINT,
 		Type INT REFERENCES business_type (Id),
 		Amount int
