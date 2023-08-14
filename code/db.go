@@ -61,7 +61,7 @@ func(d *DataBase) CreateTable() error {
     }
 	time.Sleep(5 * time.Second)
 	if _, err = db.Exec(`CREATE TABLE IF NOT EXISTS business_type (
-		Id INT,
+		Id INT UNIQUE,
 		Name TEXT,
 		Price INT,
 		Income INT
