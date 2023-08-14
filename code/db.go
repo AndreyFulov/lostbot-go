@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"time"
 
 	_ "github.com/lib/pq"
 )
@@ -55,12 +56,21 @@ func(d *DataBase) CreateTable() error {
 		Name TEXT,
 		Level INT,
 		Money INT
-	);CREATE TABLE IF NOT EXISTS business_type (
+	);`); err != nil {
+        return err
+    }
+	time.Sleep(5 * time.Second)
+	if _, err = db.Exec(`CREATE TABLE IF NOT EXISTS business_type (
 		Id INT,
 		Name TEXT,
 		Price INT,
 		Income INT
-	);CREATE TABLE IF NOT EXISTS business (
+	);`); err != nil {
+        return err
+    }
+	time.Sleep(5 * time.Second)
+	initBusinessTypes()
+	if _, err = db.Exec(`CREATE TABLE IF NOT EXISTS business (
 		OwnerTGID BIGINT,
 		Type INT REFERENCES business_type (Id),
 		Amount int
