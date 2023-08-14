@@ -27,10 +27,10 @@ Now bot will work!
 - [x] Top money
 - [x] Display profile command
 - [ ] Business System
-  - [ ] AFK Earning
+  - [x] AFK Earning
   - [x] Database for business
   - [ ] Upgrade system
-  - [ ] Buy business
+  - [x] Buy business
 - [ ] Stock system
   - [ ] Stocks can fall and rise thanks to player investment
   - [ ] Players can add their own stocks on market

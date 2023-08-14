@@ -106,7 +106,7 @@ func(d DataBase) GetAllPlayers() ([]Player, error) {
 	var players []Player
 	for rows.Next() {
 		var player Player
-		err := rows.Scan(&player.Id, &player.PlayerTGID, &player.Level, &player.Money)
+		err := rows.Scan(&player.Id, &player.PlayerTGID, &player.Name, &player.Level, &player.Money)
 		if err != nil {
 			return nil, err
 		}
@@ -217,6 +217,27 @@ func(d *DataBase) AddBusinessToPlayer(p Player, biz_type int) error {
 
 func(d *DataBase) GetPlayerBuisnesses(p Player) ([]Business, error) {
 	//Сделать функционал
+	db, err := sql.Open("postgres", dbInfo)
+	if err != nil {
+        return nil, err
+    }
+    defer db.Close()
+	var playerBizes []Business
+	for i := 1; i <=2;i++ {
+		rows, err := db.Query("SELECT * FROM business WHERE OwnerTGID = $1 AND Type = $2", p.PlayerTGID,i)
+		if err != nil {
+			return nil, err
+		}
+		if rows.Next() {
+			var biz Business
+			err := rows.Scan(&biz.OwnerTGID,&biz.Type,&biz.Amount)
+			if err != nil {
+				return nil, err
+			}
+			playerBizes = append(playerBizes, biz)
+		}
+	}
+	return playerBizes, nil
 }
 
 func (d *DataBase) GetBusinessTypeById(biz_type int) (BusinessType, error) {

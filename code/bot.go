@@ -24,6 +24,8 @@ func NewBot(token string, db *DataBase) *TelegramBot {
 }
 
 
+
+
 func (tg *TelegramBot) Bot() {
 	bot, err := tgbotapi.NewBotAPI(tg.bot_token)
 	if err != nil {
@@ -41,7 +43,7 @@ func (tg *TelegramBot) Bot() {
 			log.Printf("[%s] %s", update.Message.From.UserName, update.Message.Text)
 			userInput := strings.Fields(update.Message.Text)
 
-			
+			if len(userInput) > 0 {
 			//Логика создания	 нового пользователя
 			if userInput[0] == "/start"{
 				p, err := tg.db.GetPlayerByTGId(update.Message.From.ID)
@@ -205,7 +207,7 @@ func (tg *TelegramBot) Bot() {
 						if len(userInput) == 2 {
 							biz_id, err := strconv.Atoi(userInput[1])
 							if err != nil || biz_id <= 0 || biz_id > CountOfBusinessType {
-								msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Неправильно введен тип бизнеса!")
+								msg := tgbotapi.NewMessage(update.Message.Chat.ID, "❌Неправильно введен тип бизнеса!")
 								msg.ReplyToMessageID = update.Message.MessageID
 								bot.Send(msg)
 							}else{
@@ -213,25 +215,95 @@ func (tg *TelegramBot) Bot() {
 								if err != nil {
 									log.Fatal(err.Error())
 								}
-								msg := tgbotapi.NewMessage(update.Message.Chat.ID, fmt.Sprintf("Вы купили бизнес: %s!", d.Name))
-								msg.ReplyToMessageID = update.Message.MessageID
-								bot.Send(msg)
+								if p.Money >= d.Price {
+									err := tg.db.ChangePlayerMoney(p.PlayerTGID, p.Money - d.Price)
+									if err != nil {
+										msg:= tgbotapi.NewMessage(update.Message.Chat.ID, "❌Упс! Что-то пошло не так!")
+										msg.ReplyToMessageID = update.Message.MessageID
+										bot.Send(msg)
 
+									}else{
+										err := tg.db.AddBusinessToPlayer(p,biz_id)
+										if err != nil {
+											msg:= tgbotapi.NewMessage(update.Message.Chat.ID, "❌Упс! Что-то пошло не так!")
+											msg.ReplyToMessageID = update.Message.MessageID
+											bot.Send(msg)
+										}else{
+											msg := tgbotapi.NewMessage(update.Message.Chat.ID, fmt.Sprintf("✅Вы купили бизнес: %s!", d.Name))
+											msg.ReplyToMessageID = update.Message.MessageID
+											bot.Send(msg)
+										}
+									}
+								}else{
+									msg:= tgbotapi.NewMessage(update.Message.Chat.ID, "❌У вас недостаточно денег, чтобы купить этот бизнес!")
+									msg.ReplyToMessageID = update.Message.MessageID
+									bot.Send(msg)
+								}
 							}
 						}else{
-							msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Некоректное использование комманды, введите '/buy [тип бизнеса]' ")
+							msg := tgbotapi.NewMessage(update.Message.Chat.ID, "❌Некоректное использование комманды, введите '/buy [тип бизнеса]' ")
 							msg.ReplyToMessageID = update.Message.MessageID
 							bot.Send(msg)
 						}
 					}else {
-						msg := tgbotapi.NewMessage(update.Message.Chat.ID, "У вас еще нет аккаунта, чтоюы создать его '/start [имя]' ")
+						msg := tgbotapi.NewMessage(update.Message.Chat.ID, "❌У вас еще нет аккаунта, чтоюы создать его '/start [имя]' ")
 						msg.ReplyToMessageID = update.Message.MessageID
 						bot.Send(msg)
 					}
+				}
+				//Логика просмотра бизнесов игрока
+				if userInput[0] == "/mybizes" {
+					p, err := tg.db.GetPlayerByTGId(update.Message.From.ID)
+					if err != nil {
+						log.Panic(err.Error())
+					}
+					if p != (Player{}) {
+						b, err := tg.db.GetPlayerBuisnesses(p)
+						if err != nil {
+							msg := tgbotapi.NewMessage(update.Message.Chat.ID, "❌Упс! Что-то пошло не так!")
+							msg.ReplyToMessageID = update.Message.MessageID
+							bot.Send(msg)
+						}else {
+							s := "Ваши бизнесы: \n"
+							for i, bi := range b {
+								t, err := tg.db.GetBusinessTypeById(bi.Type)
+								if err != nil {
+									msg := tgbotapi.NewMessage(update.Message.Chat.ID, "❌Упс! Что-то пошло не так!")
+									msg.ReplyToMessageID = update.Message.MessageID
+									bot.Send(msg)
+								}
+								s += fmt.Sprintf("%s. %s - %s шт.\n", strconv.Itoa(i +1),t.Name,strconv.Itoa(bi.Amount))
+							}
+							msg := tgbotapi.NewMessage(update.Message.Chat.ID, s)
+							msg.ReplyToMessageID = update.Message.MessageID
+							bot.Send(msg)
+						}
+					}else {
+						msg := tgbotapi.NewMessage(update.Message.Chat.ID, "❌У вас еще нет аккаунта, чтоюы создать его '/start [имя]' ")
+						msg.ReplyToMessageID = update.Message.MessageID
+						bot.Send(msg)
+					}
+				}
+				//Логика показа всех типов бизнеса
+				if userInput[0] == "/bizes" {
+					s := "Бизнесы: \n"
+					for i := 1; i <= CountOfBusinessType; i ++ {
+						t, err := tg.db.GetBusinessTypeById(i)
+						if err != nil {
+							msg := tgbotapi.NewMessage(update.Message.Chat.ID, "❌Упс! Что-то пошло не так!")
+							msg.ReplyToMessageID = update.Message.MessageID
+							bot.Send(msg)
+						}
+						s += fmt.Sprintf("%s\nID:%s\nСтоимость:%s$\nДоход:%s$\n------\n",t.Name,strconv.Itoa(t.Id),strconv.Itoa(t.Price),strconv.Itoa(t.Income))
+					}
+					msg := tgbotapi.NewMessage(update.Message.Chat.ID, s)
+					msg.ReplyToMessageID = update.Message.MessageID
+					bot.Send(msg)
 				}
 
 
 				
 		}
 	}
+}
 }
