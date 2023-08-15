@@ -20,7 +20,7 @@ func main() {
 	time.Sleep(5 * time.Second)
 	db.CreateTable()
 	bot := NewBot(os.Getenv("TOKEN"), &db)
-	ticker := time.NewTicker(10 * time.Second)
+	ticker := time.NewTicker(30 * time.Minute)
 	quit := make(chan struct{})
 	go func() {
 		for {
