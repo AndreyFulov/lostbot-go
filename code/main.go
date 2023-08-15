@@ -55,6 +55,7 @@ func calcPlayerIncomeByBiz(db *DataBase) {
 			}
 			db.ChangePlayerMoney(p.PlayerTGID,p.Money + (t.Income * b.Amount))
 			log.Printf("Начисленные деньги: %s за тип бизнеса - %s в колличестве %s", p.PlayerTGID,t.Id,b.Amount)
+			time.Sleep(1 * time.Second)
 		}
 	}
 }
