@@ -18,10 +18,7 @@ func main() {
 	var db DataBase
 	db.InitInfo(host, port,user,password,dbname,sslmode)
 	time.Sleep(5 * time.Second)
-	err := db.CreateTable()
-	if err != nil {
-		log.Panic(err)
-	}
+	db.CreateTable()
 	bot := NewBot(os.Getenv("TOKEN"), &db)
 	ticker := time.NewTicker(30 * time.Minute)
 	quit := make(chan struct{})

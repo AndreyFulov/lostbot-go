@@ -5,13 +5,15 @@ services:
     image: postgres
     environment:
       POSTGRES_PASSWORD: test
+    volumes:
+      -  ./data:/var/lib/postgresql/data
 
   bot:
     image: lostbot
     environment:
       CREATE_TABLE: 'yes'
       DB_SWITCH: 'on'
-      TOKEN: '1149814876:AAH4COgEK8ZXkd2h4EKV5XVNkeMtIk0t7uw'
+      TOKEN: '5935170446:AAE-Dbzg2C5aS-bAvEdyr1VBzEv16p2u_Vw'
       HOST: db
       PORT: 5432
       USER: postgres

@@ -33,7 +33,7 @@ type DataBase struct {
 }
 var dbInfo string
 
-const CountOfBusinessType = 2
+const CountOfBusinessType = 3
 func (d *DataBase) InitInfo(host, port,user,password,dbname,sslmode string) {
 	dbInfo = fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s", host, port, user, password, dbname, sslmode)
 
@@ -69,7 +69,9 @@ func(d *DataBase) CreateTable() error {
         return err
     }
 	time.Sleep(5 * time.Second)
-	initBusinessTypes()
+	if err != nil {
+		return err
+	}
 	if _, err = db.Exec(`CREATE TABLE IF NOT EXISTS business (
 		OwnerTGID BIGINT,
 		Type INT REFERENCES business_type (Id),
@@ -181,7 +183,7 @@ func initBusinessTypes() error{
     }
     defer db.Close()
 
-	data := `DELETE * FROM business_type`
+	data := `TRUNCATE business_type`
 	if _, err = db.Exec(data, CountOfBusinessType); err != nil {
 		return err
 	}
