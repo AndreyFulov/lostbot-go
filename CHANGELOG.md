@@ -1,3 +1,11 @@
+## `v0.1.1` Fixes (16.08.23)
+
+### Fixed Bugs
+
+- Business type 3 not correctly displays
+- All of your businesses shows
+- Fixed an income calculator
+
 ## `v0.1.0` Open-Beta (15.08.23)
 
 ### Wipe
