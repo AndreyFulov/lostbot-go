@@ -230,7 +230,7 @@ func(d *DataBase) GetPlayerBuisnesses(p Player) ([]Business, error) {
     }
     defer db.Close()
 	var playerBizes []Business
-	for i := 1; i <=2;i++ {
+	for i := 1; i <= CountOfBusinessType;i++ {
 		rows, err := db.Query("SELECT * FROM business WHERE OwnerTGID = $1 AND Type = $2", p.PlayerTGID,i)
 		if err != nil {
 			return nil, err
