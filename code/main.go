@@ -20,7 +20,7 @@ func main() {
 	time.Sleep(5 * time.Second)
 	db.CreateTable()
 	bot := NewBot(os.Getenv("TOKEN"), &db)
-	ticker := time.NewTicker(30 * time.Minute)
+	ticker := time.NewTicker(10 * time.Second)
 	quit := make(chan struct{})
 	go func() {
 		for {
@@ -54,6 +54,7 @@ func calcPlayerIncomeByBiz(db *DataBase) {
 				log.Print(err.Error())
 			}
 			db.ChangePlayerMoney(p.PlayerTGID,p.Money + (t.Income * b.Amount))
+			log.Printf("Начисленные деньги: %s за тип бизнеса - %s в колличестве %s", p.PlayerTGID,t.Id,b.Amount)
 		}
 	}
 }
